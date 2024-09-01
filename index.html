@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title>Название доклада</title>
+    <title>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,36 +57,46 @@
       .cover {
         z-index: 1;
       }
+
+      h2.title {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        line-height: 1;
+        transform: translateY(-50%);
+      }
     </style>
   </head>
   <body class="shower list">
     <header class="caption">
-      <h1>Название доклада</h1>
-      <p>Василий Пупкин, Acme Corporation</p>
+      <h1>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</h1>
+      <p>Павел Дадыкин, ROGII</p>
     </header>
 
     <section class="slide clear" id="cover">
       <div>
-        <h2>Название доклада</h2>
-        <p><b>Василий Пупкин</b><br>Acme Corporation</p>
+        <h2>WebAssembly: Тяжело в учении, сложно при внедрении,<br /> быстро в использовании</h2>
+        <p><b>Павел Дадыкин</b><br>ROGII</p>
       </div>
       <style>
         #cover {
-          background: url("pictures/fc24-title.png") no-repeat center center;
+          background: url("pictures/title.svg") no-repeat center center;
           background-size: contain;
         }
         #cover div {
-          width: 580px;
+          width: 600px;
           padding-top: 0px;
           margin-left: -40px;
         }
         #cover h2 {
           margin: 0;
-          font-size: 90px;
+          font-size: 50px;
           font-weight: 700;
         }
         #cover p {
-          margin: 18px 0 0;
+          margin: 64px 0 0;
           font-size: 34px;
           line-height: 150%;
         }
@@ -94,16 +104,269 @@
     </section>
 
     <section class="slide">
-      <h2>Shower key features</h2>
-      <ol>
-        <li>Built on HTML, CSS and JavaScript</li>
-        <li>Works in all modern browsers</li>
-        <li>Themes are separated from engine</li>
-        <li>Fully keyboard accessible</li>
-        <li>Printable to PDF</li>
-      </ol>
-      <p class="note">Shower ['ʃəuə] noun. A person or thing that shows.</p>
+      <h2>Обо мне</h2>
+      <h3>Павел Дадыкин</h3>
+      <ul>
+        <li>9 лет во фронтенде​</li>
+        <li>2 года тимлид на проекте StarLite Web</li>
+        <li>Первый раз на FrontendConf</li>
+      </ul>
+      <img id="me" src="pictures/me.jpg" alt="" />
+      <style>
+        #me {
+          position: absolute;
+          right: 80px;
+          top: 50px;
+          width: 300px;
+        }
+      </style>
     </section>
+
+    <section class="slide">
+      <h2>О чём доклад</h2>
+      <ul>
+        <li>История внедрения WebAssembly на реальном проекте​</li>
+        <li>Подводные камни и решение проблем​</li>
+        <li>Стоит ли вам использовать WASM в своих проектах?​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>ROGII</h2>
+      <ul>
+        <li class="next">Разработка продуктов для нефтегазовой индустрии​​</li>
+        <li class="next">Geoscience-решения​</li>
+        <li class="next">Много математических расчётов</li>
+        <li class="next">Desktop, Web, iOS, Android, SDK, Public API</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Что за расчёты?</h2>
+      <img class="next" id="demo-well" src="pictures/demo-well.png" alt="" />
+      <style>
+        #demo-well {
+          position: absolute;
+          top: 140px;
+          width: 75%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>StarLite Web</h2>
+      <img class="next" id="starlite" src="pictures/starlite.png" alt="" />
+      <style>
+        #starlite {
+          position: absolute;
+          top: 140px;
+          width: 75%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Эволюция продуктов ROGII</h2>
+      <ol>
+        <li class="next">Расчёты написаны для Desktop App (на C++)​​</li>
+        <li class="next">Хранение данных в Cloud​</li>
+        <li class="next">Повторение расчётов в Web, iOS, Android</li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <h2>Проблемы</h2>
+      <ul>
+        <li class="next">Дублирование расчетов на разных платформах​​</li>
+        <li class="next">Низкая производительность при вычислениях​​</li>
+        <li class="next">Сложности добавления/изменения расчётов</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Цель</h2>
+      <ul>
+        <li>Внедрить в приложение расчёты, написанные на С++</li>
+        <li>Сохранить при этом текущий стэк технологий:
+          <ul>
+            <li>React</li>
+            <li><b>Typescript</b></li>
+            <li><b>Webpack</b></li>
+            <li><b>Web workers​</b></li>
+            <li>Canvas</li>
+            <li>WebGL</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>WebAssembly (WASM)​</h2>
+      <ul>
+        <li>Формат байт-кода, исполняемого современными браузерами​</li>
+        <li>Может взаимодействовать с JavaScript</li>
+      </ul>
+      <img id="wasm-logo" src="pictures/WebAssembly_Logo.svg" alt="" />
+      <style>
+        #wasm-logo {
+          position: absolute;
+          bottom: 100px;
+          left: 64px;
+          width: 150px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Плюсы WASM</h2>
+      <ul>
+        <li class="next">Обеспечивает высокую скорость исполнения​​</li>
+        <li class="next">Поддержка всеми браузерами​​</li>
+        <li class="next">Компиляция в WASM доступна для множества языков <br/> (C, <b>C++</b>, C#, Rust, Elixir, Erlang, Go, TypeScript, D, Kotlin)​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Минусы WASM</h2>
+      <ul>
+        <li class="next">Чёрный ящик​</li>
+        <li class="next">Внешняя типизация​​</li>
+        <li class="next">Конвертация данных JS → WASM → JS​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Доклады про WASM</h2>
+      <ul>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2018/abstracts/3923">
+            Разработка под WebAssembly: реальные грабли и примеры (Андрей Нагих, FC 2018)
+          </a>
+        ​</li>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2019/abstracts/4782">
+            RUST + WEBASSEMBLY (Илья Барышников, FC 2019)
+          </a>
+        ​</li>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2020/abstracts/5935">
+            WebAssembly SPA-фреймворки (FC 2020)
+          </a>
+        ​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Тяжело в учении​</h2>
+      <div class="next">
+        Примеры использования WASM в сети (конец 2021 года):
+        <ul>
+          <li>A + B​</li>
+          <li>Factorial​​</li>
+          <li>Fibonacci​</li>
+        </ul>
+      </div>
+      <img class="next" id="owl" src="pictures/owl.jpg" alt="" />
+      <style>
+        #owl {
+          position: absolute;
+          bottom: 80px;
+          right: 200px;
+          width: 360px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как же скопилировать С++ в WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Компиляция в WASM</h2>
+      <ul>
+        <li>
+          <a href="https://emscripten.org/">
+            Emscripten
+          </a>
+        ​</li>
+        <li>
+          <a href="https://github.com/WebAssembly/binaryen">
+            Binaryen
+          </a>
+        ​</li>
+        <li>
+          <a href="https://habr.com/ru/articles/454868/">
+            Компиляция C в WebAssembly без Emscripten
+          </a>
+        ​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Emscripten​</h2>
+      <ul>
+        <li>Компиляция из C/C++/LLVM-language в WebAssembly​</li>
+        <li>Запуск этого кода в Web/Node.js</li>
+        <li>Поддержка библиотек C/C++</li>
+      </ul>
+      <img id="emscripten" src="pictures/emscripten-diagram.png" alt="" />
+      <style>
+        #emscripten {
+          position: absolute;
+          bottom: 100px;
+          width: 700px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Документация Emscripten​</h2>
+      <img class="next" id="flags" src="pictures/flags.png" alt="" />
+      <style>
+        #flags {
+          position: absolute;
+          left: 96px;
+          width: 50%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Флаги компиляции</h2>
+      <pre>
+          <code>-s DYNAMIC_EXECUTION=0 -s ENVIRONMENT=worker -s MODULARIZE=1</code>
+          <code>-s ALLOW_MEMORY_GROWTH=1 --bind</code>
+      </pre>
+      <ul>
+        <li>Выключаем использование eval​</li>
+        <li><b>Задаем выполнение в веб-воркере</b>​​​</li>
+        <li>Оборачиваем в модульный код (без глобальных переменных)​</li>
+        <li>Разрешаем автоматический рост памяти​</li>
+        <li>Говорим привязать все функции к js</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Где же взять описание функций?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Генерация документации​</h2>
+      <a href="https://www.doxygen.nl/">
+        Doxygen
+      </a>
+      <img id="doxygen" src="pictures/doxygen.png" alt="" />
+      <style>
+        #doxygen {
+          position: absolute;
+          left: 96px;
+          top: 220px;
+          width: 60%;
+        }
+      </style>
+    </section>
+
+    <!-- Примеры -->
 
     <section class="slide">
       <h2>Plain text on your slides</h2>
@@ -252,16 +515,18 @@
     <section class="slide clear" id="last-slide">
       <h2>Пожалуйста, оставьте свой отзыв</h2>
       <p>
-        <b>Василий Пупкин</b><br />
-        ACME Corporation<br />
+        <b>Павел Дадыкин</b>
+        <br />
+        ROGII
+        <br />
       </p>
       <p>
-        https://github.com/shower/shower<br>
+        https://github.com/Meloman4eg/wasm-fc-2024<br>
       </p>
       <img src="pictures/qr.png" alt="" />
       <style>
         #last-slide {
-          background: url("pictures/fc24-title.png") no-repeat center center;
+          background: url("pictures/title.svg") no-repeat center center;
           background-size: contain;
         }
         #last-slide h2 {
@@ -280,9 +545,9 @@
       </style>
     </section>
 
-    <footer class="badge">
+    <!-- <footer class="badge">
       <a href="https://github.com/shower/shower">Fork me on GitHub</a>
-    </footer>
+    </footer> -->
 
     <div class="progress"></div>
 
