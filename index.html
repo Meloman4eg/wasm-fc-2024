@@ -100,6 +100,16 @@
           font-size: 34px;
           line-height: 150%;
         }
+
+        li.up {
+          padding-left: .5em;
+          list-style-type: "👍";
+        }
+
+        li.down {
+          padding-left: .5em;
+          list-style-type: "👎";
+        }
       </style>
     </section>
 
@@ -132,13 +142,22 @@
     </section>
 
     <section class="slide">
-      <h2>ROGII</h2>
+      <h2>&nbsp;</h2>
       <ul>
         <li class="next">Разработка продуктов для нефтегазовой индустрии​​</li>
         <li class="next">Geoscience-решения​</li>
         <li class="next">Много математических расчётов</li>
         <li class="next">Desktop, Web, iOS, Android, SDK, Public API</li>
       </ul>
+      <img id="rogii" src="pictures/rogii.svg" alt="" />
+      <style>
+        #rogii {
+          position: absolute;
+          top: 64px;
+          left: 64px;
+          width: 200px;
+        }
+      </style>
     </section>
 
     <section class="slide">
@@ -154,9 +173,16 @@
     </section>
 
     <section class="slide">
-      <h2>StarLite Web</h2>
+      <img id="starlite-logo" src="pictures/starlite-logo.svg" alt="" />
       <img class="next" id="starlite" src="pictures/starlite.png" alt="" />
       <style>
+        #starlite-logo {
+          position: absolute;
+          top: 64px;
+          left: 64px;
+          width: 220px;
+        }
+
         #starlite {
           position: absolute;
           top: 140px;
@@ -332,6 +358,10 @@
     </section>
 
     <section class="slide">
+      <h2 class="title">Дефолтной конфигурации Emscripten не существует!</h2>
+    </section>
+
+    <section class="slide">
       <h2>Флаги компиляции</h2>
       <pre>
           <code>-s DYNAMIC_EXECUTION=0 -s ENVIRONMENT=worker -s MODULARIZE=1</code>
@@ -364,6 +394,181 @@
           width: 60%;
         }
       </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как сделать удобной отладку ошибок?</h2>
+    </section>
+
+    <section class="slide" id="cmake">
+      <h2>Разные сборки (через cmake)</h2>
+      <div class="columns two">
+        <div>
+          <p><b>Debug</b></p>
+          <ul>
+            <li class="down">Большой вес файла</li>
+            <li class="down">Работает медленнее</li>
+            <li class="up">Детальное описание ошибок</li>
+          </ul>
+          <img src="pictures/debug.png" alt="" />
+        </div>
+        <div>
+          <p><b>Release</b></p>
+          <ul>
+            <li class="up">Маленький вес файла</li>
+            <li class="up">Работает быстро</li>
+            <li class="down">Сложно отлаживать</li>
+          </ul>
+          <img src="pictures/release.png" alt="" />
+        </div>
+      </div>
+      <style>
+        #cmake ul {
+          font-size: 24px;
+        }
+        #cmake ul li::before {
+          content: '';
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Утечки памяти</h2>
+      <ul class="next">
+        <li>Добавили дополнительный флаг в сборку</li>
+        <li>Он передаёт флаг <code>-fsanitize=address –g2</code> компилятору​​</li>
+        <li>Вызов функции для принудительного сбора статистики​​</li>
+        <li>Только для Debug сборки​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Подключение WASM к проекту</h2>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как настроить Webpack?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack</h2>
+      <div class="columns two">
+        <div>
+          <a href="https://github.com/DrSensor/webassembly-loader">
+            webassembly-loader
+          </a>
+          <br />
+          <a href="https://github.com/ballercat/wasm-loader">
+            wasm-loader
+          </a>
+        </div>
+        <div>
+          <img src="pictures/wasm-loader.png" height="60%" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack 4 file-loader​</h2>
+      <pre class="next">
+        <code>{</code>
+        <code>  test: <mark>/\.wasm$/</mark>,</code>
+        <code>  type: "javascript/auto",</code>
+        <code>  use: [{​​</code>
+        <code>  <mark>loader: "file-loader",​​</mark>​​</code>
+        <code>    options: {​ name: "wasm/[name].[hash].[ext]" }​​</code>
+        <code>  }]​​​​</code>
+        <code>}​</code>
+    </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Загрузка WASM в приложение​</h2>
+      <pre class="next">
+        <code>import <mark>wasm</mark> from 'math-js.wasm';</code>
+        <code> </code>
+        <code>const response = await client.get<ArrayBuffer>(<mark>wasm</mark>, {</code>
+        <code>    responseType: '<mark>arraybuffer</mark>' ​​</code>
+        <code>});</code>
+        <code> </code>
+        <code>const wasmBinary = response.data;​​</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack 5</h2>
+      <p>
+        <a href="https://webpack.js.org/guides/asset-modules/">
+          Asset Modules
+        </a>
+        на замену file-loader
+        <br />
+        <a href="https://webpack.js.org/configuration/experiments/">
+          syncWebAssembly / asyncWebAssembly
+        </a>
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как добавить типизацию?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Typescript</h2>
+      <ul>
+        <li>
+          <a href="https://www.npmjs.com/package/@types/emscripten">
+            @types/emscripten
+          </a>
+           &nbsp;для вспомогательных методов
+        ​</li>
+        <li>
+          Описание структур и функций вручную, используя Doxygen
+        ​</li>
+        <li class="next">
+          Автоматическая генерация <b>.ts</b> из <b>.hpp</b>
+        </li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>CSP Error</h2>
+      <figure>
+        <blockquote>
+          <p>
+            Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src https:".
+          </p>
+        </blockquote>
+      </figure>
+      <pre class="next">
+        <code>Content-Security-Policy: script-src <mark>'wasm-unsafe-eval'</mark></code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как конвертировать данные JS ↔ WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Типы данных</h2>
+      <div class="columns two">
+        <div>
+          <p><b>JS</b></p>
+          <ul>
+            <li>Массивы объектов</li>
+            <li>Автоматическое выделение памяти</li>
+            <li>Автоматическая сборка мусора</li>
+          </ul>
+        </div>
+        <div class="next">
+          <p><b>C/C++</b></p>
+          <ul>
+            <li>std::vector​ / TypedArray​ / Динамические массивы</li>
+            <li>Требуется выделение памяти</li>
+            <li>Нужно освобождать выделенную память</li>
+          </ul>
+        </div>
+      </div>
     </section>
 
     <!-- Примеры -->
@@ -418,10 +623,7 @@
         <blockquote>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.
+            incididunt ut labore et dolore magna aliqua.
           </p>
         </blockquote>
         <figcaption>Marcus Tullius Cicero</figcaption>
