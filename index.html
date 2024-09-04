@@ -443,6 +443,50 @@
     </section>
 
     <section class="slide">
+      <h2 class="title">Как реализовать версионирование?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <p>Emscripten на выходе даёт 2 файла:</p>
+      <ul>
+        <li>Бинарный .wasm</li>
+        <li>Обвязки в виде .js файла​​</li>
+      </ul>
+      <img src="pictures/glue.png" alt="" />
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <p>Добавить в начало JS файла комментарий</p>
+      <pre>
+        <code>/*</code>
+        <code>  Version: 1.3.0</code>
+        <code>  Commit: 681def4aefb99c9de5357617dc138b66e6ae1d0b ​</code>
+        <code>  Pipeline: 103990 ​</code>
+        <code>*/</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <ul>
+        <li>Используем
+          <a href="https://www.sonatype.com/products/sonatype-nexus-oss-download">
+            Nexus
+          </a>
+        </li>
+        <li>Собираем в npm-пакет​​</li>
+        <li>Учитываем вариант сборки (Debug/Release)</li>
+      </ul>
+      <pre class="next">
+        <code>"dependencies": { ​</code>
+        <code>   "@nexus-npm/wasm": "<mark>0.9.0-Release</mark>", ​</code>
+        <code>}​</code>
+      </pre>
+    </section>
+
+    <section class="slide">
       <h2 class="title">Подключение WASM к проекту</h2>
     </section>
 
@@ -552,7 +596,7 @@
     <section class="slide">
       <h2>Типы данных</h2>
       <div class="columns two">
-        <div>
+        <div class="next">
           <p><b>JS</b></p>
           <ul>
             <li>Массивы объектов</li>
@@ -569,6 +613,63 @@
           </ul>
         </div>
       </div>
+    </section>
+
+    <section class="slide">
+      <h2>Конвертация JS ↔ WASM</h2>
+      <pre id="small-code" class="next">
+        <code>const pointer = instance.<mark>_malloc</mark>(size * Float64Array.BYTES_PER_ELEMENT); </code>
+        <code> </code>
+        <code>instance.<mark>HEAPF64.set</mark>(</code>
+        <code>  new Float64Array(size),</code>
+        <code>  ​pointer / Float64Array.BYTES_PER_ELEMENT,</code>
+        <code>); </code>
+        <code> </code>
+        <code>instance.<mark>_free</mark>(trajectory.mdArray.pointer); ​​</code>
+      </pre>
+      <style>
+        #small-code {
+          font-size: 20px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Добавление обёртки</h2>
+      <ul>
+        <li>Добавили метаданные для функций конвертации и высвобождения памяти​</li>
+        <li>Emscripten сам конвертирует типы в C-структуры​</li>
+        <li>Передаём сразу массив объектов​</li>
+        <li>Вызываем freeCollection(data), когда массив уже не нужен​</li>
+      </ul>
+      <pre>
+        <code><mark>convertToJSObject</mark>< WasmType, JSArrayType >(data)​</code>
+        <code><mark>convertFromJSObject</mark>< JSArrayType, WasmType >(data)</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Undefined / NaN</h2>
+      <p>В <b>TypeScript</b> мы можем написать</p>
+      <pre>
+        <code>type X = <mark>number | undefined</mark>​</code>
+      </pre>
+      <p class="next">
+        В <b>C/C++</b> так нельзя!
+        <br />
+        Из функций расчёта в этом случае нам возвращается <b>NaN</b>
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2>Undefined → NaN</h2>
+      <pre>
+        <code>// Преобразование для передачи в модуль расчёта</code>
+        <code>point.data ?? NaN </code>
+        <code> </code>
+        <code>// Проверка на наличие значения​</code>
+        <code> if (point.data && !isNaN(point.data))</code>
+      </pre>
     </section>
 
     <!-- Примеры -->
@@ -725,7 +826,7 @@
       <p>
         https://github.com/Meloman4eg/wasm-fc-2024<br>
       </p>
-      <img src="pictures/qr.png" alt="" />
+      <img src="pictures/qr-code.gif" alt="" />
       <style>
         #last-slide {
           background: url("pictures/title.svg") no-repeat center center;
