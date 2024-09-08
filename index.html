@@ -203,7 +203,7 @@
     <section class="slide">
       <h2>Проблемы</h2>
       <ul>
-        <li class="next">Дублирование расчетов на разных платформах​​</li>
+        <li class="next">Дублирование расчётов на разных платформах​​</li>
         <li class="next">Низкая производительность при вычислениях​​</li>
         <li class="next">Сложности добавления/изменения расчётов</li>
       </ul>
@@ -364,8 +364,8 @@
     <section class="slide">
       <h2>Флаги компиляции</h2>
       <pre>
-          <code>-s DYNAMIC_EXECUTION=0 -s ENVIRONMENT=worker -s MODULARIZE=1</code>
-          <code>-s ALLOW_MEMORY_GROWTH=1 --bind</code>
+          <code>-s DYNAMIC_EXECUTION=0 -s ENVIRONMENT=worker</code>
+          <code>-s MODULARIZE=1 -s ALLOW_MEMORY_GROWTH=1 --bind</code>
       </pre>
       <ul>
         <li>Выключаем использование eval​</li>
@@ -640,11 +640,11 @@
         <li>Добавили метаданные для функций конвертации и высвобождения памяти​</li>
         <li>Emscripten сам конвертирует типы в C-структуры​</li>
         <li>Передаём сразу массив объектов​</li>
-        <li>Вызываем freeCollection(data), когда массив уже не нужен​</li>
+        <li>Вызываем <code>freeCollection(data)</code>, когда массив не нуже​н</li>
       </ul>
       <pre>
-        <code><mark>convertToJSObject</mark>< WasmType, JSArrayType >(data)​</code>
-        <code><mark>convertFromJSObject</mark>< JSArrayType, WasmType >(data)</code>
+        <code><mark>convertToJSObject</mark>&lt;WasmType, JSArrayType&gt;(data)​</code>
+        <code><mark>convertFromJSObject</mark>&lt;JSArrayType, WasmType&gt;(data)</code>
       </pre>
     </section>
 
@@ -664,155 +664,156 @@
     <section class="slide">
       <h2>Undefined → NaN</h2>
       <pre>
-        <code>// Преобразование для передачи в модуль расчёта</code>
-        <code>point.data ?? NaN </code>
+        <code><span class="comment">// Преобразование для передачи в модуль расчёта</span></code>
+        <code> point.data ?? <mark>NaN</mark> </code>
         <code> </code>
-        <code>// Проверка на наличие значения​</code>
-        <code> if (point.data && !isNaN(point.data))</code>
+        <code><span class="comment"> // Проверка на наличие значения</span>​</code>
+        <code> if (point.data && !<mark>isNaN</mark>(point.data))</code>
       </pre>
     </section>
 
-    <!-- Примеры -->
-
     <section class="slide">
-      <h2>Plain text on your slides</h2>
-      <p>
-        Lorem ipsum dolor sit amet, consectetur <a href="#4">adipisicing</a> elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-        <em>quis nostrud</em> exercitation ullamco laboris <strong>nisi ut aliquip</strong> ex ea
-        commodo consequat. Duis aute irure <i>dolor</i> in reprehenderit in voluptate velit esse
-        cillum <b>dolore</b> eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-        proident, sunt in <code>&lt;culpa&gt;</code> qui officia deserunt mollit anim id est
-        laborum.
-      </p>
+      <h2>Batch запросов</h2>
+      <ul>
+        <li class="next">Большая часть времени тратится на преобразования из структур данных JS в WASM и обратно​</li>
+        <li class="next">Лучше выполнить одну большую операцию, чем много маленьких​</li>
+      </ul>
     </section>
 
     <section class="slide">
-      <h2>Two columns if you like</h2>
-      <div class="columns two">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.
-        </p>
-        <p>
-          Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-          nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.
-        </p>
-      </div>
-    </section>
-
-    <section class="slide">
-      <h2>All kind of lists</h2>
-      <ol>
-        <li>Simple lists are marked with bullets</li>
-        <li>Ordered lists begin with a number</li>
-        <li>
-          You can even nest lists one inside another
-          <ul>
-            <li>Or mix their types</li>
-            <li>But do not go too far</li>
-            <li>Otherwise audience will be bored</li>
-          </ul>
-        </li>
-        <li>Look, seven rows exactly!</li>
-      </ol>
-    </section>
-
-    <section class="slide">
-      <h2>Serious citations</h2>
-      <figure>
-        <blockquote>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua.
-          </p>
-        </blockquote>
-        <figcaption>Marcus Tullius Cicero</figcaption>
-      </figure>
-    </section>
-
-    <section class="slide">
-      <h2>Code samples</h2>
+      <h2>Batch запросов</h2>
       <pre>
-          <code>&lt;!DOCTYPE html&gt;</code>
-          <code class="mark">&lt;html lang="en"&gt;</code>
-          <code><mark>&lt;head&gt;</mark> <span class="comment">&lt;!--Comment--&gt;</span></code>
-          <code>    &lt;title&gt;Shower&lt;/title&gt;</code>
-          <code>    &lt;meta charset="<mark class="important">UTF-8</mark>"&gt;</code>
-          <code>    &lt;link rel="stylesheet" href="screen.css"&gt;</code>
-          <code><mark>&lt;/head&gt;</mark></code>
+        <code><mark>for</mark> (const element of elements) {</code>
+        <code>  const point = <mark>calculatePoint</mark>(element.x);</code>
+        <code>  points.push(point);</code>
+        <code>}​</code>
+      </pre>
+      <pre class="next">
+        <code>const xArray = elements.map((element) => element.x);</code>
+        <code>const points = <mark>wasm.calculatePoints</mark>(xArray);</code>
       </pre>
     </section>
 
     <section class="slide">
-      <h2>Even tables</h2>
-      <table>
-        <tr>
-          <th scope="col">Locavore</th>
-          <th>Umami</th>
-          <th>Helvetica</th>
-          <th>Vegan</th>
-        </tr>
-        <tr>
-          <th scope="row">Fingerstache</th>
-          <td>Kale</td>
-          <td>Chips</td>
-          <td>Keytar</td>
-        </tr>
-        <tr>
-          <th scope="row">Sriracha</th>
-          <td>Gluten-free</td>
-          <td>Ennui</td>
-          <td>Keffiyeh</td>
-        </tr>
-        <tr>
-          <th scope="row">Thundercats</th>
-          <td>Jean</td>
-          <td>Shorts</td>
-          <td>Biodiesel</td>
-        </tr>
-        <tr>
-          <th scope="row">Terry</th>
-          <td>Richardson</td>
-          <td>Swag</td>
-          <td>Blog</td>
-        </tr>
-      </table>
-      <p>It’s good to have information organized.</p>
+      <h2 class="title">Как всё подружить с веб-воркерами?</h2>
     </section>
 
-    <section class="slide" id="picture">
-      <h2>Pictures</h2>
-      <figure>
-        <img
-          class="cover"
-          src="pictures/picture.jpg"
-          alt="Orange typewriter on a wooden table close-up"
-        />
-        <figcaption class="copyright right white">
-          <a href="https://fiftyfootshadows.net">© John Carey</a>
-        </figcaption>
-      </figure>
+    <section class="slide">
+      <h2>Web workers</h2>
+      <ul>
+        <li class="next">Механизм, который позволяет скрипту выполняться в фоновом потоке</li>
+        <li class="next">Основной поток без блокировки и замедления​​​</li>
+        <li class="next">Worker-ы могут запускать другие worker-ы​​​</li>
+        <li class="next">Они общаются друг с другом через postMessage​​​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers в StarLite​</h2>
+      <img id="ww-1" src="pictures/ww-1.png" alt="" />
       <style>
-        #picture h2 {
-          color: white;
+        #ww-1 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
         }
       </style>
     </section>
 
     <section class="slide">
-      <h2 class="shout shrink">You can even shout this way</h2>
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-2" src="pictures/ww-2.png" alt="" />
+      <style>
+        #ww-2 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
+        }
+      </style>
     </section>
 
     <section class="slide">
-      <h2>Inner navigation</h2>
-      <ol>
-        <li>Lets you reveal list items one by one</li>
-        <li class="next">To keep some key points</li>
-        <li class="next">In secret from audience</li>
-        <li class="next">But it will work only once</li>
-        <li class="next">Nobody wants to see the same joke twice</li>
-      </ol>
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-3" src="pictures/ww-3.png" alt="" />
+      <style>
+        #ww-3 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-4" src="pictures/ww-4.png" alt="" />
+      <style>
+        #ww-4 {
+          position: absolute;
+          left: calc(50% - 130px);
+          top: 160px;
+          height: 50%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как тестировать WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Тестирование</h2>
+      <ul>
+        <li class="next">Unit-тесты на стороне С++</li>
+        <li class="next">​Интеграционные тесты QAA​​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Jest</h2>
+      <pre>
+        <code>import { <mark>readFileSync</mark> } from 'fs';</code>
+        <code> </code>
+        <code>const wasmBinary = <mark>readFileSync</mark>(</code>
+        <code>  'node_modules/path-to-wasm/<mark>math.wasm</mark>',​</code>
+        <code>);</code>
+        <code> </code>
+        <code>instance = await createModule({ wasmBinary });</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Результаты</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Плюсы</h2>
+      <ul>
+        <li class="next">Скорость расчётов выросла (в 2 – 10 раз)​</li>
+        <li class="next">Расчёты на разных платформах совпадают​​​</li>
+        <li class="next">Нет дублирования математических расчётов​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Минусы</h2>
+      <ul>
+        <li class="next">Сложность отладки​</li>
+        <li class="next">Зависимость от другой команды​​​</li>
+        <li class="next">Долгая итерация внедрения​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Когда стоит использовать WASM?</h2>
+      <ul>
+        <li class="next">Нужные функции уже написаны на другом языке​</li>
+        <li class="next">У вас большие объёмы данных и вам нужен прирост в скорости​</li>
+        <li class="next">У вас есть ресурсы на внедрение​​</li>
+      </ul>
     </section>
 
     <section class="slide clear" id="last-slide">
@@ -847,10 +848,6 @@
         }
       </style>
     </section>
-
-    <!-- <footer class="badge">
-      <a href="https://github.com/shower/shower">Fork me on GitHub</a>
-    </footer> -->
 
     <div class="progress"></div>
 
