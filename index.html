@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <title>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!-- prettier-ignore -->
+    <link rel="stylesheet" href="shower/themes/ribbon/styles/styles.css">
+    <style>
+      .montserrat {
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: 100;
+        font-style: normal;
+      }
+
+      .shower {
+        --slide-ratio: calc(16 / 9);
+        --ribbon-size: 40px;
+        font-family: "Montserrat", sans-serif;
+        font-optical-sizing: auto;
+        font-style: normal;
+      }
+
+      .progress::before {
+        background-color: #ed4344;
+      }
+
+      .slide {
+        padding-top: 51px;
+        background-image: url("pictures/fc24-cover.png");
+        background-repeat: no-repeat;
+        background-size: 100%;
+        background-position: center;
+      }
+
+      .slide.clear {
+        background-image: none;
+      }
+
+      .slide::after {
+        top: 4px;
+        right: 15px;
+        left: auto;
+        background: none;
+        color: #000;
+      }
+
+      .slide h2 {
+        color: #000;
+        font-size: 60px;
+      }
+
+      .cover {
+        z-index: 1;
+      }
+
+      h2.title {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        width: 100%;
+        text-align: center;
+        line-height: 1;
+        transform: translateY(-50%);
+      }
+    </style>
+  </head>
+  <body class="shower list">
+    <header class="caption">
+      <h1>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</h1>
+      <p>Павел Дадыкин, ROGII</p>
+    </header>
+
+    <section class="slide clear" id="cover">
+      <div>
+        <h2>WebAssembly: Тяжело в учении, сложно при внедрении,<br /> быстро в использовании</h2>
+        <p><b>Павел Дадыкин</b><br>ROGII</p>
+      </div>
+      <style>
+        #cover {
+          background: url("pictures/title.svg") no-repeat center center;
+          background-size: contain;
+        }
+        #cover div {
+          width: 600px;
+          padding-top: 0px;
+          margin-left: -40px;
+        }
+        #cover h2 {
+          margin: 0;
+          font-size: 50px;
+          font-weight: 700;
+        }
+        #cover p {
+          margin: 64px 0 0;
+          font-size: 34px;
+          line-height: 150%;
+        }
+
+        li.up {
+          padding-left: .5em;
+          list-style-type: "👍";
+        }
+
+        li.down {
+          padding-left: .5em;
+          list-style-type: "👎";
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Обо мне</h2>
+      <h3>Павел Дадыкин</h3>
+      <ul>
+        <li>9 лет во фронтенде​</li>
+        <li>2 года тимлид на проекте StarLite Web</li>
+        <li>Первый раз на FrontendConf</li>
+      </ul>
+      <img id="me" src="pictures/me.jpg" alt="" />
+      <style>
+        #me {
+          position: absolute;
+          right: 80px;
+          top: 50px;
+          width: 300px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>О чём доклад</h2>
+      <ul>
+        <li>История внедрения WebAssembly на реальном проекте​</li>
+        <li>Подводные камни и решение проблем​</li>
+        <li>Стоит ли вам использовать WASM в своих проектах?​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>&nbsp;</h2>
+      <ul>
+        <li class="next">Разработка продуктов для нефтегазовой индустрии​​</li>
+        <li class="next">Geoscience-решения​</li>
+        <li class="next">Много математических расчётов</li>
+        <li class="next">Desktop, Web, iOS, Android, SDK, Public API</li>
+      </ul>
+      <img id="rogii" src="pictures/rogii.svg" alt="" />
+      <style>
+        #rogii {
+          position: absolute;
+          top: 64px;
+          left: 64px;
+          width: 200px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Что за расчёты?</h2>
+      <img class="next" id="demo-well" src="pictures/demo-well.png" alt="" />
+      <style>
+        #demo-well {
+          position: absolute;
+          top: 140px;
+          width: 75%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <img id="starlite-logo" src="pictures/starlite-logo.svg" alt="" />
+      <img class="next" id="starlite" src="pictures/starlite.png" alt="" />
+      <style>
+        #starlite-logo {
+          position: absolute;
+          top: 64px;
+          left: 64px;
+          width: 220px;
+        }
+
+        #starlite {
+          position: absolute;
+          top: 140px;
+          width: 75%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Эволюция продуктов ROGII</h2>
+      <ol>
+        <li class="next">Расчёты написаны для Desktop App (на C++)​​</li>
+        <li class="next">Хранение данных в Cloud​</li>
+        <li class="next">Повторение расчётов в Web, iOS, Android</li>
+      </ol>
+    </section>
+
+    <section class="slide">
+      <h2>Проблемы</h2>
+      <ul>
+        <li class="next">Дублирование расчётов на разных платформах​​</li>
+        <li class="next">Низкая производительность при вычислениях​​</li>
+        <li class="next">Сложности добавления/изменения расчётов</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Цель</h2>
+      <ul>
+        <li>Внедрить в приложение расчёты, написанные на С++</li>
+        <li>Сохранить при этом текущий стэк технологий:
+          <ul>
+            <li>React</li>
+            <li><b>Typescript</b></li>
+            <li><b>Webpack</b></li>
+            <li><b>Web workers​</b></li>
+            <li>Canvas</li>
+            <li>WebGL</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>WebAssembly (WASM)​</h2>
+      <ul>
+        <li>Формат байт-кода, исполняемого современными браузерами​</li>
+        <li>Может взаимодействовать с JavaScript</li>
+      </ul>
+      <img id="wasm-logo" src="pictures/WebAssembly_Logo.svg" alt="" />
+      <style>
+        #wasm-logo {
+          position: absolute;
+          bottom: 100px;
+          left: 64px;
+          width: 150px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Плюсы WASM</h2>
+      <ul>
+        <li class="next">Обеспечивает высокую скорость исполнения​​</li>
+        <li class="next">Поддержка всеми браузерами​​</li>
+        <li class="next">Компиляция в WASM доступна для множества языков <br/> (C, <b>C++</b>, C#, Rust, Elixir, Erlang, Go, TypeScript, D, Kotlin)​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Минусы WASM</h2>
+      <ul>
+        <li class="next">Чёрный ящик​</li>
+        <li class="next">Внешняя типизация​​</li>
+        <li class="next">Конвертация данных JS → WASM → JS​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Доклады про WASM</h2>
+      <ul>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2018/abstracts/3923">
+            Разработка под WebAssembly: реальные грабли и примеры (Андрей Нагих, FC 2018)
+          </a>
+        ​</li>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2019/abstracts/4782">
+            RUST + WEBASSEMBLY (Илья Барышников, FC 2019)
+          </a>
+        ​</li>
+        <li>
+          <a href="https://frontendconf.ru/moscow/2020/abstracts/5935">
+            WebAssembly SPA-фреймворки (FC 2020)
+          </a>
+        ​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Тяжело в учении​</h2>
+      <div class="next">
+        Примеры использования WASM в сети (конец 2021 года):
+        <ul>
+          <li>A + B​</li>
+          <li>Factorial​​</li>
+          <li>Fibonacci​</li>
+        </ul>
+      </div>
+      <img class="next" id="owl" src="pictures/owl.jpg" alt="" />
+      <style>
+        #owl {
+          position: absolute;
+          bottom: 80px;
+          right: 200px;
+          width: 360px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как же скопилировать С++ в WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Компиляция в WASM</h2>
+      <ul>
+        <li>
+          <a href="https://emscripten.org/">
+            Emscripten
+          </a>
+        ​</li>
+        <li>
+          <a href="https://github.com/WebAssembly/binaryen">
+            Binaryen
+          </a>
+        ​</li>
+        <li>
+          <a href="https://habr.com/ru/articles/454868/">
+            Компиляция C в WebAssembly без Emscripten
+          </a>
+        ​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Emscripten​</h2>
+      <ul>
+        <li>Компиляция из C/C++/LLVM-language в WebAssembly​</li>
+        <li>Запуск этого кода в Web/Node.js</li>
+        <li>Поддержка библиотек C/C++</li>
+      </ul>
+      <img id="emscripten" src="pictures/emscripten-diagram.png" alt="" />
+      <style>
+        #emscripten {
+          position: absolute;
+          bottom: 100px;
+          width: 700px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Документация Emscripten​</h2>
+      <img class="next" id="flags" src="pictures/flags.png" alt="" />
+      <style>
+        #flags {
+          position: absolute;
+          left: 96px;
+          width: 50%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Дефолтной конфигурации Emscripten не существует!</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Флаги компиляции</h2>
+      <pre>
+          <code>-s DYNAMIC_EXECUTION=0 -s ENVIRONMENT=worker</code>
+          <code>-s MODULARIZE=1 -s ALLOW_MEMORY_GROWTH=1 --bind</code>
+      </pre>
+      <ul>
+        <li>Выключаем использование eval​</li>
+        <li><b>Задаем выполнение в веб-воркере</b>​​​</li>
+        <li>Оборачиваем в модульный код (без глобальных переменных)​</li>
+        <li>Разрешаем автоматический рост памяти​</li>
+        <li>Говорим привязать все функции к js</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Где же взять описание функций?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Генерация документации​</h2>
+      <a href="https://www.doxygen.nl/">
+        Doxygen
+      </a>
+      <img id="doxygen" src="pictures/doxygen.png" alt="" />
+      <style>
+        #doxygen {
+          position: absolute;
+          left: 96px;
+          top: 220px;
+          width: 60%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как сделать удобной отладку ошибок?</h2>
+    </section>
+
+    <section class="slide" id="cmake">
+      <h2>Разные сборки (через cmake)</h2>
+      <div class="columns two">
+        <div>
+          <p><b>Debug</b></p>
+          <ul>
+            <li class="down">Большой вес файла</li>
+            <li class="down">Работает медленнее</li>
+            <li class="up">Детальное описание ошибок</li>
+          </ul>
+          <img src="pictures/debug.png" alt="" />
+        </div>
+        <div>
+          <p><b>Release</b></p>
+          <ul>
+            <li class="up">Маленький вес файла</li>
+            <li class="up">Работает быстро</li>
+            <li class="down">Сложно отлаживать</li>
+          </ul>
+          <img src="pictures/release.png" alt="" />
+        </div>
+      </div>
+      <style>
+        #cmake ul {
+          font-size: 24px;
+        }
+        #cmake ul li::before {
+          content: '';
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Утечки памяти</h2>
+      <ul class="next">
+        <li>Добавили дополнительный флаг в сборку</li>
+        <li>Он передаёт флаг <code>-fsanitize=address –g2</code> компилятору​​</li>
+        <li>Вызов функции для принудительного сбора статистики​​</li>
+        <li>Только для Debug сборки​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как реализовать версионирование?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <p>Emscripten на выходе даёт 2 файла:</p>
+      <ul>
+        <li>Бинарный .wasm</li>
+        <li>Обвязки в виде .js файла​​</li>
+      </ul>
+      <img src="pictures/glue.png" alt="" />
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <p>Добавить в начало JS файла комментарий</p>
+      <pre>
+        <code>/*</code>
+        <code>  Version: 1.3.0</code>
+        <code>  Commit: 681def4aefb99c9de5357617dc138b66e6ae1d0b ​</code>
+        <code>  Pipeline: 103990 ​</code>
+        <code>*/</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Версионирование</h2>
+      <ul>
+        <li>Используем
+          <a href="https://www.sonatype.com/products/sonatype-nexus-oss-download">
+            Nexus
+          </a>
+        </li>
+        <li>Собираем в npm-пакет​​</li>
+        <li>Учитываем вариант сборки (Debug/Release)</li>
+      </ul>
+      <pre class="next">
+        <code>"dependencies": { ​</code>
+        <code>   "@nexus-npm/wasm": "<mark>0.9.0-Release</mark>", ​</code>
+        <code>}​</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Подключение WASM к проекту</h2>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как настроить Webpack?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack</h2>
+      <div class="columns two">
+        <div>
+          <a href="https://github.com/DrSensor/webassembly-loader">
+            webassembly-loader
+          </a>
+          <br />
+          <a href="https://github.com/ballercat/wasm-loader">
+            wasm-loader
+          </a>
+        </div>
+        <div>
+          <img src="pictures/wasm-loader.png" height="60%" alt="" />
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack 4 file-loader​</h2>
+      <pre class="next">
+        <code>{</code>
+        <code>  test: <mark>/\.wasm$/</mark>,</code>
+        <code>  type: "javascript/auto",</code>
+        <code>  use: [{​​</code>
+        <code>  <mark>loader: "file-loader",​​</mark>​​</code>
+        <code>    options: {​ name: "wasm/[name].[hash].[ext]" }​​</code>
+        <code>  }]​​​​</code>
+        <code>}​</code>
+    </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Загрузка WASM в приложение​</h2>
+      <pre class="next">
+        <code>import <mark>wasm</mark> from 'math-js.wasm';</code>
+        <code> </code>
+        <code>const response = await client.get<ArrayBuffer>(<mark>wasm</mark>, {</code>
+        <code>    responseType: '<mark>arraybuffer</mark>' ​​</code>
+        <code>});</code>
+        <code> </code>
+        <code>const wasmBinary = response.data;​​</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Webpack 5</h2>
+      <p>
+        <a href="https://webpack.js.org/guides/asset-modules/">
+          Asset Modules
+        </a>
+        на замену file-loader
+        <br />
+        <a href="https://webpack.js.org/configuration/experiments/">
+          syncWebAssembly / asyncWebAssembly
+        </a>
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как добавить типизацию?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Typescript</h2>
+      <ul>
+        <li>
+          <a href="https://www.npmjs.com/package/@types/emscripten">
+            @types/emscripten
+          </a>
+           &nbsp;для вспомогательных методов
+        ​</li>
+        <li>
+          Описание структур и функций вручную, используя Doxygen
+        ​</li>
+        <li class="next">
+          Автоматическая генерация <b>.ts</b> из <b>.hpp</b>
+        </li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>CSP Error</h2>
+      <figure>
+        <blockquote>
+          <p>
+            Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: "script-src https:".
+          </p>
+        </blockquote>
+      </figure>
+      <pre class="next">
+        <code>Content-Security-Policy: script-src <mark>'wasm-unsafe-eval'</mark></code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как конвертировать данные JS ↔ WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Типы данных</h2>
+      <div class="columns two">
+        <div class="next">
+          <p><b>JS</b></p>
+          <ul>
+            <li>Массивы объектов</li>
+            <li>Автоматическое выделение памяти</li>
+            <li>Автоматическая сборка мусора</li>
+          </ul>
+        </div>
+        <div class="next">
+          <p><b>C/C++</b></p>
+          <ul>
+            <li>std::vector​ / TypedArray​ / Динамические массивы</li>
+            <li>Требуется выделение памяти</li>
+            <li>Нужно освобождать выделенную память</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Конвертация JS ↔ WASM</h2>
+      <pre id="small-code" class="next">
+        <code>const pointer = instance.<mark>_malloc</mark>(size * Float64Array.BYTES_PER_ELEMENT); </code>
+        <code> </code>
+        <code>instance.<mark>HEAPF64.set</mark>(</code>
+        <code>  new Float64Array(size),</code>
+        <code>  ​pointer / Float64Array.BYTES_PER_ELEMENT,</code>
+        <code>); </code>
+        <code> </code>
+        <code>instance.<mark>_free</mark>(trajectory.mdArray.pointer); ​​</code>
+      </pre>
+      <style>
+        #small-code {
+          font-size: 20px;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Добавление обёртки</h2>
+      <ul>
+        <li>Добавили метаданные для функций конвертации и высвобождения памяти​</li>
+        <li>Emscripten сам конвертирует типы в C-структуры​</li>
+        <li>Передаём сразу массив объектов​</li>
+        <li>Вызываем <code>freeCollection(data)</code>, когда массив не нуже​н</li>
+      </ul>
+      <pre>
+        <code><mark>convertToJSObject</mark>&lt;WasmType, JSArrayType&gt;(data)​</code>
+        <code><mark>convertFromJSObject</mark>&lt;JSArrayType, WasmType&gt;(data)</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Undefined / NaN</h2>
+      <p>В <b>TypeScript</b> мы можем написать</p>
+      <pre>
+        <code>type X = <mark>number | undefined</mark>​</code>
+      </pre>
+      <p class="next">
+        В <b>C/C++</b> так нельзя!
+        <br />
+        Из функций расчёта в этом случае нам возвращается <b>NaN</b>
+      </p>
+    </section>
+
+    <section class="slide">
+      <h2>Undefined → NaN</h2>
+      <pre>
+        <code><span class="comment">// Преобразование для передачи в модуль расчёта</span></code>
+        <code> point.data ?? <mark>NaN</mark> </code>
+        <code> </code>
+        <code><span class="comment"> // Проверка на наличие значения</span>​</code>
+        <code> if (point.data && !<mark>isNaN</mark>(point.data))</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2>Batch запросов</h2>
+      <ul>
+        <li class="next">Большая часть времени тратится на преобразования из структур данных JS в WASM и обратно​</li>
+        <li class="next">Лучше выполнить одну большую операцию, чем много маленьких​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Batch запросов</h2>
+      <pre>
+        <code><mark>for</mark> (const element of elements) {</code>
+        <code>  const point = <mark>calculatePoint</mark>(element.x);</code>
+        <code>  points.push(point);</code>
+        <code>}​</code>
+      </pre>
+      <pre class="next">
+        <code>const xArray = elements.map((element) => element.x);</code>
+        <code>const points = <mark>wasm.calculatePoints</mark>(xArray);</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как всё подружить с веб-воркерами?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers</h2>
+      <ul>
+        <li class="next">Механизм, который позволяет скрипту выполняться в фоновом потоке</li>
+        <li class="next">Основной поток без блокировки и замедления​​​</li>
+        <li class="next">Worker-ы могут запускать другие worker-ы​​​</li>
+        <li class="next">Они общаются друг с другом через postMessage​​​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers в StarLite​</h2>
+      <img id="ww-1" src="pictures/ww-1.png" alt="" />
+      <style>
+        #ww-1 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-2" src="pictures/ww-2.png" alt="" />
+      <style>
+        #ww-2 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-3" src="pictures/ww-3.png" alt="" />
+      <style>
+        #ww-3 {
+          position: absolute;
+          left: 96px;
+          top: 160px;
+          width: 70%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2>Web workers & WASM​</h2>
+      <img id="ww-4" src="pictures/ww-4.png" alt="" />
+      <style>
+        #ww-4 {
+          position: absolute;
+          left: calc(50% - 130px);
+          top: 160px;
+          height: 50%;
+        }
+      </style>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Как тестировать WASM?</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Тестирование</h2>
+      <ul>
+        <li class="next">Unit-тесты на стороне С++</li>
+        <li class="next">​Интеграционные тесты QAA​​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Jest</h2>
+      <pre>
+        <code>import { <mark>readFileSync</mark> } from 'fs';</code>
+        <code> </code>
+        <code>const wasmBinary = <mark>readFileSync</mark>(</code>
+        <code>  'node_modules/path-to-wasm/<mark>math.wasm</mark>',​</code>
+        <code>);</code>
+        <code> </code>
+        <code>instance = await createModule({ wasmBinary });</code>
+      </pre>
+    </section>
+
+    <section class="slide">
+      <h2 class="title">Результаты</h2>
+    </section>
+
+    <section class="slide">
+      <h2>Плюсы</h2>
+      <ul>
+        <li class="next">Скорость расчётов выросла (в 2 – 10 раз)​</li>
+        <li class="next">Расчёты на разных платформах совпадают​​​</li>
+        <li class="next">Нет дублирования математических расчётов​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Минусы</h2>
+      <ul>
+        <li class="next">Сложность отладки​</li>
+        <li class="next">Зависимость от другой команды​​​</li>
+        <li class="next">Долгая итерация внедрения​​</li>
+      </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Когда стоит использовать WASM?</h2>
+      <ul>
+        <li class="next">Нужные функции уже написаны на другом языке​</li>
+        <li class="next">У вас большие объёмы данных и вам нужен прирост в скорости​</li>
+        <li class="next">У вас есть ресурсы на внедрение​​</li>
+      </ul>
+    </section>
+
+    <section class="slide clear" id="last-slide">
+      <h2>Пожалуйста, оставьте свой отзыв</h2>
+      <p>
+        <b>Павел Дадыкин</b>
+        <br />
+        ROGII
+        <br />
+      </p>
+      <p>
+        https://github.com/Meloman4eg/wasm-fc-2024<br>
+      </p>
+      <img src="pictures/qr-code.gif" alt="" />
+      <style>
+        #last-slide {
+          background: url("pictures/title.svg") no-repeat center center;
+          background-size: contain;
+        }
+        #last-slide h2 {
+          font-size: 62px;
+          width: 593px;
+        }
+        #last-slide p {
+          line-height: initial;
+        }
+        #last-slide img {
+          position: absolute;
+          right: 40px;
+          top: 40px;
+          width: 250px;
+        }
+      </style>
+    </section>
+
+    <div class="progress"></div>
+
+    <script src="shower/shower.js"></script>
+  </body>
+</html>
