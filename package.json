@@ -1,4 +1,8 @@
 {
+  "name": "wasm-fc-2024",
+  "version": "1.0.0",
+  "description": "Presentation slides",
+  "author": "Pavel Dadykin",
   "private": true,
   "engines": {
     "node": "20.x",
