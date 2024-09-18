@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</title>
+    <title>Тяжело в учении, сложно при внедрении, быстро в использовании</title>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -71,13 +71,13 @@
   </head>
   <body class="shower list">
     <header class="caption">
-      <h1>WebAssembly: Тяжело в учении, сложно при внедрении, быстро в использовании</h1>
+      <h1>Тяжело в учении, сложно при внедрении, быстро в использовании</h1>
       <p>Павел Дадыкин, ROGII</p>
     </header>
 
     <section class="slide clear" id="cover">
       <div>
-        <h2>WebAssembly: Тяжело в учении, сложно при внедрении,<br /> быстро в использовании</h2>
+        <h2>Тяжело в учении,<br />сложно при внедрении,<br />быстро в использовании</h2>
         <p><b>Павел Дадыкин</b><br>ROGII</p>
       </div>
       <style>
@@ -92,7 +92,7 @@
         }
         #cover h2 {
           margin: 0;
-          font-size: 50px;
+          font-size: 64px;
           font-weight: 700;
         }
         #cover p {
@@ -137,7 +137,7 @@
       <ul>
         <li>История внедрения WebAssembly на реальном проекте​</li>
         <li>Подводные камни и решение проблем​</li>
-        <li>Стоит ли вам использовать WASM в своих проектах?​</li>
+        <li>Стоит ли вам использовать WebAssembly в своих проектах?​</li>
       </ul>
     </section>
 
@@ -213,7 +213,7 @@
       <h2>Цель</h2>
       <ul>
         <li>Внедрить в приложение расчёты, написанные на С++</li>
-        <li>Сохранить при этом текущий стэк технологий:
+        <li>Сохранить при этом текущий стек технологий:
           <ul>
             <li>React</li>
             <li><b>Typescript</b></li>
@@ -358,7 +358,7 @@
     </section>
 
     <section class="slide">
-      <h2 class="title">Дефолтной конфигурации Emscripten не существует!</h2>
+      <h2 class="title">Дефолтной конфигурации Emscripten<br />не существует!</h2>
     </section>
 
     <section class="slide">
@@ -450,14 +450,14 @@
       <p>Emscripten на выходе даёт 2 файла:</p>
       <ul>
         <li>Бинарный .wasm</li>
-        <li>Обвязки в виде .js файла​​</li>
+        <li>Обвязка в виде .js-файла​​</li>
       </ul>
       <img src="pictures/glue.png" alt="" />
     </section>
 
     <section class="slide">
       <h2>Версионирование</h2>
-      <p>Добавить в начало JS файла комментарий</p>
+      <p>Добавить в начало JS-файла комментарий</p>
       <pre>
         <code>/*</code>
         <code>  Version: 1.3.0</code>
@@ -702,7 +702,7 @@
       <ul>
         <li class="next">Механизм, который позволяет скрипту выполняться в фоновом потоке</li>
         <li class="next">Основной поток без блокировки и замедления​​​</li>
-        <li class="next">Worker-ы могут запускать другие worker-ы​​​</li>
+        <li class="next">Worker'ы могут запускать другие worker'ы​​​</li>
         <li class="next">Они общаются друг с другом через postMessage​​​​</li>
       </ul>
     </section>
@@ -810,7 +810,7 @@
       <h2>Когда стоит использовать WASM?</h2>
       <ul>
         <li class="next">Нужные функции уже написаны на другом языке​</li>
-        <li class="next">У вас большие объёмы данных и вам нужен прирост в скорости​</li>
+        <li class="next">У вас большие объёмы данных, и вам нужен прирост в скорости​</li>
         <li class="next">У вас есть ресурсы на внедрение​​</li>
       </ul>
     </section>
@@ -822,9 +822,14 @@
         <br />
         ROGII
         <br />
+        <br />
       </p>
       <p>
         https://meloman4eg.github.io/wasm-fc-2024/<br>
+      </p>
+
+      <p>
+        <a href="https://t.me/meloman4eg" target="_blank" >@meloman4eg</a>
       </p>
       <img src="pictures/qr-code.gif" alt="" />
       <style>
