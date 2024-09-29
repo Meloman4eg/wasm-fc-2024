@@ -166,8 +166,9 @@
       <style>
         #demo-well {
           position: absolute;
-          top: 140px;
-          width: 75%;
+          top: 60px;
+          left: 32px;
+          width: 90%;
         }
       </style>
     </section>
@@ -178,15 +179,16 @@
       <style>
         #starlite-logo {
           position: absolute;
-          top: 64px;
+          top: 16px;
           left: 64px;
-          width: 220px;
+          width: 200px;
         }
 
         #starlite {
           position: absolute;
-          top: 140px;
-          width: 75%;
+          top: 68px;
+          left: 0;
+          width: 100%;
         }
       </style>
     </section>
@@ -423,9 +425,14 @@
         </div>
       </div>
       <style>
+        #cmake p {
+          margin-bottom: 0;
+        }
+
         #cmake ul {
           font-size: 24px;
         }
+
         #cmake ul li::before {
           content: '';
         }
@@ -593,7 +600,6 @@
     </section>
 
     <section class="slide">
-      <h2>Типы данных</h2>
       <div class="columns two">
         <div class="next">
           <p><b>JS</b></p>
@@ -639,11 +645,15 @@
         <li>Добавили метаданные для функций конвертации и высвобождения памяти​</li>
         <li>Emscripten сам конвертирует типы в C-структуры​</li>
         <li>Передаём сразу массив объектов​</li>
-        <li>Вызываем <code>freeCollection(data)</code>, когда массив не нуже​н</li>
       </ul>
+    </section>
+
+    <section class="slide">
+      <h2>Удобные функции</h2>
       <pre>
         <code><mark>convertToJSObject</mark>&lt;WasmType, JSArrayType&gt;(data)​</code>
         <code><mark>convertFromJSObject</mark>&lt;JSArrayType, WasmType&gt;(data)</code>
+        <code><mark>freeCollection</mark>(data)</code>
       </pre>
     </section>
 
@@ -667,7 +677,7 @@
         <code> point.data ?? <mark>NaN</mark> </code>
         <code> </code>
         <code><span class="comment"> // Проверка на наличие значения</span>​</code>
-        <code> if (point.data && !<mark>isNaN</mark>(point.data))</code>
+        <code> if (!<mark>isNaN</mark>(point.data))</code>
       </pre>
     </section>
 
